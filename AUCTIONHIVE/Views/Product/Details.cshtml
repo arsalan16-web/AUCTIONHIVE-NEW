@@ -1,0 +1,429 @@
+﻿@using System.Text.Json
+@using AUCTIONHIVE.Data
+@using Microsoft.EntityFrameworkCore;
+
+@inject ApplicationDbContext _context;
+
+@*
+
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = Model.Title;
+    ScheduledAuction scheduledAuction = new ScheduledAuction();
+    if(Model.ScheduledAuction != null)
+    {
+        scheduledAuction = Model.ScheduledAuction;
+    }
+    var obj = @Model.Images.Select(x => x.Image).ToArray();
+    var imagesJson = JsonSerializer.Serialize(Model.Images.Select(i => i.Image));
+    var topProducts = _context.Products.Include(x => x.Images).Include(x => x.SubCategory)
+             .Where(p => Model.CategoryId==p.CategoryId && p.Status == "Active")
+             .OrderByDescending(p=>p.ProductViews)
+             .Take(15)
+           
+             .ToList();
+
+
+}
+@model Product
+
+<link href="~/vendors/glightbox/glightbox.min.css" rel="stylesheet">
+
+<div>
+
+
+    <!-- ============================================-->
+    <!-- <section> begin ============================-->
+    <section class="py-0">
+        <div class="container-small">
+            <nav class="mb-3" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+
+                    <li class="breadcrumb-item"><a href="~/">Home</a></li>
+                   
+                    <li class="breadcrumb-item"><a asp-action="all" asp-controller="products" asp-route-category="@Model.Category.Id">@Model.Category.Name</a></li>
+                    <li class="breadcrumb-item"><a asp-action="all" asp-controller="products" asp-route-Subcategory="@Model.SubCategory.Id" >@Model.SubCategory.Name</a></li>
+                    <li class="breadcrumb-item active lh-sm line-clamp-3 product-name" aria-current="page">@Model.Title</li>
+                </ol>
+            </nav>
+            <div class="row g-5 mb-5 mb-lg-8" data-product-details="data-product-details">
+                <div class="col-12 col-lg-6">
+                    <div class="tab-content" id="gallery-slider-tab-content">
+                        <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+                            <div class="swiper-theme-container swiper-slider-gallery">
+                                <div class="swiper theme-slider" data-swiper='{"speed":500,"spaceBetween":16,"slidesPerView":"auto","simulateTouch":false,"centeredSlides":true,"initialSlide":1,"thumb":{"slidesPerView":4,"spaceBetween":8,"freeMode":true,"loop":true,"watchSlidesProgress":true,"watchSlidesVisibility":true,"grabCursor":true,"breakpoints":{"540":{"slidesPerView":7},"768":{"slidesPerView":8},"1200":{"slidesPerView":9}}}}'>
+                                    <div class="swiper-wrapper align-items-center" id="gallery-slider-all">
+                                        @foreach(var item in Model.Images)
+                                        {
+                                            <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape ecommerce">
+                                                <a href="@item.Image" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="@item.Image" alt="" /></a>
+                                                <div class="backdrop-faded d-flex justify-content-between p-5">
+                                                    <div>
+                                                        @* <h3 class="text-white mb-2">AuctionHive</h3>
+ *@
+                                                        <p class="mb-0 text-secondary-light">AuctionHive</p>
+                                                 
+                                                    </div>
+                                                  @*   <div class="dropdown">
+                                                        <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                                    </div> *@
+                                                </div>
+                                            </div>
+                                        }
+                                
+                                    </div>
+                                </div>
+                                <div class="swiper-nav">
+                                    <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                                    <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                                </div>
+                            </div>
+                        </div>
+               
+                    </div>
+
+
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex flex-wrap">
+                                <div class="me-2">
+                                    <span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span></div>
+                                <p class="text-primary fw-semibold mb-2"> @Model.ProductViews People viewed </p>
+                            </div>
+                            <h3 class="mb-3 lh-sm">@Model.Title</h3>
+                            <div class="d-flex flex-wrap align-items-start mb-3"><span class="badge text-bg-success fs-9 rounded-pill me-2 fw-semibold">@Model.Condition</span>
+                                </div>
+                            
+                            <div class="d-flex flex-wrap align-items-center">
+                               
+
+                                @if (Model.IsDiscount)
+                                {
+                                    <h1 class="me-3">@Model.DiscountedPrice.ToString("C")</h1>
+
+                                    <p class="text-body-quaternary text-decoration-line-through fs-6 mb-0 me-3">@Model.Price.ToString("C")</p>
+                                    <p class="text-warning fw-bolder fs-6 mb-0">@Model.DiscountPercentage% off</p>
+
+                                }
+                                else
+                                {
+                                    <h1 class="me-3">@Model.Price.ToString("C")</h1>
+
+                                }
+                              
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <a href="profile.html">
+                                    <div class="avatar avatar-xl  me-2">
+                                        <img class="rounded-circle " src="../../assets/img/team/9.webp" alt="">
+                                    </div>
+                                </a>
+                                <div class="flex-1">
+                                    <a class="fw-bold mb-0 text-body-emphasis" >@Model.Seller.FirstName @Model.Seller.LastName</a>
+                                    <p class="fs-10 mb-0 text-body-tertiary text-opacity-85 fw-semibold">@STATIC.GetTimeAgo(Model.CreatedAt.Value)
+                                        <svg class="svg-inline--fa fa-circle text-body-quaternary text-opacity-50" data-fa-transform="shrink-10 down-2" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="" style="transform-origin: 0.5em 0.625em;"><g transform="translate(256 256)"><g transform="translate(0, 64)  scale(0.375, 0.375)  rotate(0 0 0)"><path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z" transform="translate(-256 -256)"></path></g></g></svg>
+                                        <!-- <span class="fa-solid fa-circle text-body-quaternary text-opacity-50" data-fa-transform="shrink-10 down-2"></span> Font Awesome fontawesome.com -->@Model.Seller.Address<svg class="svg-inline--fa fa-circle text-body-quaternary text-opacity-50" data-fa-transform="shrink-10 down-2" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="" style="transform-origin: 0.5em 0.625em;"><g transform="translate(256 256)"><g transform="translate(0, 64)  scale(0.375, 0.375)  rotate(0 0 0)"><path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z" transform="translate(-256 -256)"></path></g></g></svg><!-- <span class="fa-solid fa-circle text-body-quaternary text-opacity-50" data-fa-transform="shrink-10 down-2"></span> Font Awesome fontawesome.com --><svg class="svg-inline--fa fa-earth-americas text-body" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="earth-americas" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M57.7 193l9.4 16.4c8.3 14.5 21.9 25.2 38 29.8L163 255.7c17.2 4.9 29 20.6 29 38.5v39.9c0 11 6.2 21 16 25.9s16 14.9 16 25.9v39c0 15.6 14.9 26.9 29.9 22.6c16.1-4.6 28.6-17.5 32.7-33.8l2.8-11.2c4.2-16.9 15.2-31.4 30.3-40l8.1-4.6c15-8.5 24.2-24.5 24.2-41.7v-8.3c0-12.7-5.1-24.9-14.1-33.9l-3.9-3.9c-9-9-21.2-14.1-33.9-14.1H257c-11.1 0-22.1-2.9-31.8-8.4l-34.5-19.7c-4.3-2.5-7.6-6.5-9.2-11.2c-3.2-9.6 1.1-20 10.2-24.5l5.9-3c6.6-3.3 14.3-3.9 21.3-1.5l23.2 7.7c8.2 2.7 17.2-.4 21.9-7.5c4.7-7 4.2-16.3-1.2-22.8l-13.6-16.3c-10-12-9.9-29.5 .3-41.3l15.7-18.3c8.8-10.3 10.2-25 3.5-36.7l-2.4-4.2c-3.5-.2-6.9-.3-10.4-.3C163.1 48 84.4 108.9 57.7 193zM464 256c0-36.8-9.6-71.4-26.4-101.5L412 164.8c-15.7 6.3-23.8 23.8-18.5 39.8l16.9 50.7c3.5 10.4 12 18.3 22.6 20.9l29.1 7.3c1.2-9 1.8-18.2 1.8-27.5zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"></path></svg><!-- <span class="fa-solid fa-earth-americas text-body"></span> Font Awesome fontawesome.com --></p>
+                                </div>
+                                
+                            </div>
+                            @if (Model.IsAuction)
+                            {
+                                if(Model.ScheduledAuction != null)
+                                {
+
+                                    if(Model.ScheduledAuction.StartTime<DateTime.Now && Model.ScheduledAuction.EndTime > DateTime.Now)
+                                    {
+                                        <div class="p-4 mb-5 rounded-4 text-center">
+                                            <h2 class="fw-bold text-warning-emphasis mb-3">
+                                                ⏳ Hurry Up! Bidding Ends Soon!
+                                            </h2>
+                                            <p class="fs-7">
+                                                Submit your best offer before the clock hits zero. The auction is LIVE and time is running out!
+                                            </p>
+
+                                            <!-- Countdown Timer -->
+                                            <div id="countdown-timer" class="display-5 fw-bold text-danger mt-3 mb-3"></div>
+
+                                            <p class="mb-0 text-muted small fst-italic">
+                                                Bidding closes on <span id="end-datetime" class="fw-bold"></span>
+                                            </p>
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="p-4 mb-5 rounded-4 text-center">
+                                        <div id="countdown-timer" class="display-5 fw-bold text-danger mt-3 mb-3"></div>
+
+                                        <p class="mb-0 text-muted small fst-italic">
+                                            Bidding closed on <span id="end-datetime" class="fw-bold"></span>
+                                        </p>
+                                        </div>
+                                        
+                                    }
+
+                                }
+                                
+                            }
+                          
+                @*             <p class="mb-2 text-body-secondary"><strong class="text-body-highlight">Do you want it on Saturday, July 29th?</strong> Choose <strong class="text-body-highlight">Saturday Delivery </strong>at checkout if you want your order delivered within 12 hours 43 minutes, <a class="fw-bold" href="#!">Details. </a><strong class="text-body-highlight">Gift wrapping is available.</strong></p>
+                            <p class="text-danger-dark fw-bold mb-5 mb-lg-0">Special offer ends in 23:00:45 hours</p>
+                 *@
+                        </div>
+                        <div>
+
+                            <div class="d-flex mt-5">
+                                @{
+                                    string text = Model.IsAuction ? Model.IsVideoStreaming ? "Join Auction" : "Bid Now" : "Buy";
+                                    bool isExpired = Model.ScheduledAuction != null ? Model.ScheduledAuction.EndTime < DateTime.Now ? true : false : false;
+
+
+                                }
+                                @if (isExpired==false)
+                                {
+                                    <button class="btn btn-lg btn-outline-warning rounded-pill w-100 me-3 px-2 px-sm-4 fs-9 fs-sm-8">
+
+                                        <span class="me-2 far fa-heart"></span>Wishlist
+                                    </button>
+                                    <button class="btn btn-lg btn-warning rounded-pill w-100 fs-9 fs-sm-8 me-3">
+                                        <i class="fa-solid fa-comment me-2"></i>
+                                        Sms 
+                                    </button>
+
+                                    <a class="btn btn-lg btn-warning rounded-pill w-100 fs-9 fs-sm-8" asp-action="joinauction" asp-controller="auctions" asp-route-auctionid="@Model.ScheduledAuction.Id">
+                                        @if(text=="Bid Now")
+                                        {
+                                            <i class="fa-solid fa-gavel me-2"></i>
+                                        }
+                                        else if(text=="Join Auction")
+                                        {
+
+                                            <i class="fa-solid fa-right-to-bracket me-2"></i>
+                                        
+                                        }
+                                        else
+                                        {
+                                            <span class="fas fa-shopping-cart me-2"></span>
+                                        }
+                                       @text
+                                    </a>
+
+                                }
+                                else
+                                {
+
+                                    <button  class="btn btn-lg btn-outline-warning rounded-pill w-100 me-3 px-2 px-sm-4 fs-9 fs-sm-8">
+
+
+                                        <span class="me-2 far fa-heart"></span>Wishlist
+                                    </button>
+                                    <button disabled class="btn btn-lg btn-warning rounded-pill w-100 fs-9 fs-sm-8 me-3">
+                                        <i class="fa-solid fa-comment me-2"></i>Contact
+                                    </button>
+
+                                    <button disabled class="btn btn-lg btn-warning rounded-pill w-100 fs-9 fs-sm-8">
+                                        @if (text == "Bid Now")
+                                        {
+                                            <i class="fa-solid fa-gavel me-2"></i>
+                                        }
+                                        else if (text == "Join Auction")
+                                        {
+
+                                            <i class="fa-solid fa-right-to-bracket me-2"></i>
+
+                                        }
+                                        else
+                                        {
+                                            <span class="fas fa-shopping-cart me-2"></span>
+                                        }
+    @text
+                                    </button>
+
+
+                                }
+
+
+                            </div>
+
+                     
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div><!-- end of .container-->
+    </section><!-- <section> close ============================-->
+    <!-- ============================================-->
+    <!-- ============================================-->
+    <!-- <section> begin ============================-->
+    <section class="py-0">
+        <div class="container-small">
+            <ul class="nav nav-underline fs-9 mb-4" id="productTab" role="tablist">
+                <li class="nav-item"><a class="nav-link active" id="description-tab" data-bs-toggle="tab" href="#tab-description" role="tab" aria-controls="tab-description" aria-selected="true">Description</a></li>
+                    </ul>
+            <div class="row gx-3 gy-7">
+                <div class="col-12 col-lg-7 col-xl-8">
+                    <div class="tab-content" id="productTabContent">
+                        <div class="tab-pane pe-lg-6 pe-xl-12 fade show active text-body-emphasis" id="tab-description" role="tabpanel" aria-labelledby="description-tab">
+                        
+                           @Html.Raw(Model.Description)
+
+                        </div>
+                   
+                    </div>
+                </div>
+                @if (Model.IsAuction)
+                {
+                    
+                    <div class="col-12 col-lg-5 col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-body-emphasis">Bids</h5>
+                                <div class="w-75">
+                                    <p class="text-body-tertiary fs-9 fw-bold line-clamp-1">@Model.Title</p>
+                                </div>
+                                <div class="border-dashed border-y border-translucent py-4">
+                                    @if (!User.Identity.IsAuthenticated)
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center mb-5">
+
+                                            <a class="btn btn-outline-warning">Login to See Bids</a>
+                                        </div>
+                                    }
+
+                                </div>
+                                @*  <div class="d-flex align-items-end justify-content-between pt-3">
+                                <div>
+                                    <h5 class="mb-2 text-body-tertiary text-opacity-85">Total</h5>
+                                    <h4 class="mb-0 text-body-emphasis">$958.99</h4>
+                                </div>
+                                <div class="btn btn-outline-warning">Add 3 items to cart<span class="fas fa-shopping-cart ms-2"></span></div>
+                            </div> *@
+                            </div>
+                        </div>
+                    </div>
+                }
+         
+            </div>
+        </div><!-- end of .container-->
+    </section><!-- <section> close ============================-->
+    <!-- ============================================-->
+    <section class="py-0 mb-9 mt-4">
+        <div class="container">
+            <div class="d-flex flex-between-center mb-3">
+                <div>
+                    <h3>Similar Products</h3>
+                    <p class="mb-0 text-body-tertiary fw-semibold">@Model.Category.Name</p>
+                </div><button class="btn btn-sm btn-phoenix-primary">View all</button>
+            </div>
+            <div class="swiper-theme-container products-slider">
+                <div class="swiper swiper theme-slider" data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"576":{"slidesPerView":3,"spaceBetween":20},"768":{"slidesPerView":4,"spaceBetween":20},"992":{"slidesPerView":5,"spaceBetween":20},"1200":{"slidesPerView":6,"spaceBetween":16}}}'>
+                    <div class="swiper-wrapper">
+                        @foreach (var item in topProducts)
+                        {
+                            <div class="swiper-slide">
+                                <div class="position-relative text-decoration-none product-card h-100">
+                                    <div class="d-flex flex-column justify-content-between h-100">
+                                        <div>
+                                            <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                                <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist"><span class="fas fa-heart d-block-hover" data-fa-transform="down-1"></span><span class="far fa-heart d-none-hover" data-fa-transform="down-1"></span></button><img class="object-fit-cover overflow-hidden  img-fluid" src="@item.Images.FirstOrDefault().Image" alt="" />
+                                            </div><a class="stretched-link" asp-action="Details" asp-controller="product" asp-route-id="@item.Id">
+                                                <h6 class="mb-2 lh-sm line-clamp-3 product-name">@item.Title</h6>
+                                            </a>
+                                            <p class="fs-9">
+
+                                                <span class="badge badge-phoenix-warning">@item.Condition</span>
+
+                                                <span class="text-warning">  ( @item.ProductViews people viewd )</span>
+
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="fs-9 text-body-highlight fw-bold mb-2">@item.Category.Name > @item.SubCategory.Name</p>
+                                            <div class="d-flex align-items-center mb-1">
+                                                @if (item.IsDiscount == true)
+                                                {
+
+
+                                                    <p class="me-2 text-body text-decoration-line-through mb-0">@item.Price.ToString("C")</p>
+                                                    <h3 class="text-body-emphasis mb-0">@item.DiscountedPrice.ToString("C")</h3>
+
+                                                }
+                                                else
+                                                {
+
+                                                    <h3 class="text-body-emphasis mb-0">@item.Price.ToString("C")</h3>
+
+
+                                                }
+
+
+
+                                            </div>
+                                            <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">@item.Location</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+
+
+                    </div>
+                </div>
+                <div class="swiper-nav">
+                    <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                    <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                </div>
+            </div><a class="fw-bold d-md-none" href="#!">Explore more<span class="fas fa-chevron-right fs-9 ms-1"></span></a>
+
+      
+        </div><!-- end of .container-->
+    </section>
+
+</div>
+
+                                @section Scripts{
+                                        <script src="~/vendors/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="~/vendors/isotope-packery/packery-mode.pkgd.min.js"></script>
+    <script src="~/vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="~/vendors/glightbox/glightbox.min.js"></script>
+
+    <script>
+        // Example: Pass the end time from C# to JavaScript
+        // This would typically be done using Razor like:
+        let endTime = new Date('@scheduledAuction.EndTime.ToString("yyyy-MM-ddTHH:mm:ss")');
+        //let endTime = new Date('2025-04-10T17:00:00'); // Replace with C#-injected DateTime
+
+        document.getElementById("end-datetime").innerText = endTime.toLocaleString();
+
+        function updateCountdown() {
+          const now = new Date();
+          const distance = endTime - now;
+
+          if (distance <= 0) {
+
+            document.getElementById("countdown-timer").innerHTML = "🛑 Bidding Closed";
+            return;
+          }
+
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          document.getElementById("countdown-timer").innerHTML =
+            `${hours.toString().padStart(2, '0')}:${minutes
+              .toString()
+              .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+          setTimeout(updateCountdown, 1000);
+        }
+
+        updateCountdown();
+    </script>
+                                }

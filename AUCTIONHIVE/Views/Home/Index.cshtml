@@ -1,0 +1,637 @@
+﻿@using AUCTIONHIVE.Data
+@{
+    ViewData["Title"] = "Home Page";
+}
+@inject ApplicationDbContext _context
+@{
+
+    var categories = _context.Categories;
+}
+@model ProductsViewModel
+
+<!-- ============================================-->
+<!-- <section> begin ============================-->
+<section class="py-0">
+    <div class="container-small">
+        <div class="scrollbar">
+            <div class="d-flex justify-content-between">
+                @foreach(var item in categories)
+                {
+                    var bgClasses = new[] { "bg-warning", "bg-success", "bg-primary", "bg-info" };
+                    var firstChar = char.ToUpper(item.Name[0]);
+
+                    // Get a random index for the background class
+                    var randomBgClass = bgClasses[new Random().Next(bgClasses.Length)];
+
+                    <a class="icon-nav-item" href="#!">
+                        <div class="icon-container mb-2" data-bs-theme="light"> @firstChar<span class="fs-4 uil uil-star text-warning"></span></div>
+                        <p class="nav-label">@item.Name</p>
+                    </a>
+
+
+                }
+                
+              
+            </div>
+        </div>
+    </div><!-- end of .container-->
+</section><!-- <section> close ============================-->
+<!-- ============================================-->
+<!-- ============================================-->
+<!-- <section> begin ============================-->
+<section class="py-0 px-xl-3">
+    <div class="container px-xl-0 px-xxl-3">
+        <div class="row g-3 mb-9">
+            <div class="tab-content mt-3" id="gallery-slider-tab-content">
+                <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+                    <div class="swiper-theme-container swiper-slider-gallery">
+                        <div class="swiper theme-slider" data-swiper='{"speed":500,"spaceBetween":16,"slidesPerView":"auto","simulateTouch":false,"centeredSlides":true,"initialSlide":1,"thumb":{"slidesPerView":4,"spaceBetween":8,"freeMode":true,"loop":true,"watchSlidesProgress":true,"watchSlidesVisibility":true,"grabCursor":true,"breakpoints":{"540":{"slidesPerView":7},"768":{"slidesPerView":8},"1200":{"slidesPerView":9}}}}'>
+                            <div class="swiper-wrapper align-items-center" id="gallery-slider-all">
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape ecommerce">
+                                    <a href="../../assets/img/gallery/100.png" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/100.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Nature</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape photography">
+                                    <a href="../../assets/img/gallery/101.png" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/101.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Pixel 4</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden portrait ecommerce">
+                                    <a href="../../assets/img/gallery/102.png" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/102.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Sunset</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden square project-management">
+                                    <a href="../../assets/img/gallery/103.png" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/103.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Ear Buds</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape ecommerce photography">
+                                    <a href="../../assets/img/gallery/104.png" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/104.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Sunset Horizon</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden portrait project-management photography">
+                                    <a href="../../assets/img/gallery/71.png" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/71.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Sunset</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape photography">
+                                    <a href="../../assets/img/gallery/105.png" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/105.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Ear Buds</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden square ecommerce photography">
+                                    <a href="../../assets/video/2.mp4" data-gallery="gallery-slider-all">
+                                        <div class="video-container h-100">
+                                            <video class="video w-100 h-100 object-fit-cover overflow-hidden rounded-2" muted="muted" data-play-on-hover="data-play-on-hover" poster="../../assets/video/2.png">
+                                                <source src="../../assets/video/2.mp4" type="video/mp4" />
+                                            </video>
+                                            <div class="circle-icon-item position-absolute top-50 start-50 translate-middle bg-body-emphasis rounded-pill bg-opacity-50"><span class="fa-solid fa-video text-body fs-9 fs-sm-8"></span></div>
+                                        </div><img class="d-none" src="../../assets/video/2.png" alt="" />
+                                    </a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Bike Ride</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape project-management">
+                                    <a href="../../assets/video/3.mp4" data-gallery="gallery-slider-all">
+                                        <div class="video-container h-100">
+                                            <video class="video w-100 h-100 object-fit-cover overflow-hidden rounded-2" muted="muted" data-play-on-hover="data-play-on-hover" poster="../../assets/video/3.png">
+                                                <source src="../../assets/video/3.mp4" type="video/mp4" />
+                                            </video>
+                                            <div class="circle-icon-item position-absolute top-50 start-50 translate-middle bg-body-emphasis rounded-pill bg-opacity-50"><span class="fa-solid fa-video text-body fs-9 fs-sm-8"></span></div>
+                                        </div><img class="d-none" src="../../assets/video/3.png" alt="" />
+                                    </a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Mountain Sunset</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden portrait project-management">
+                                    <a href="../../assets/img/gallery/66.png" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/66.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Desert Photography</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden square project-management">
+                                    <a href="../../assets/img/gallery/42.png" data-gallery="gallery-slider-all"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/42.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">London</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-nav">
+                            <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                            <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="ecommerce-tab-pane" role="tabpanel" aria-labelledby="ecommerce-tab" tabindex="0">
+                    <div class="swiper-theme-container swiper-slider-gallery">
+                        <div class="swiper theme-slider" data-swiper='{"speed":500,"spaceBetween":16,"slidesPerView":"auto","simulateTouch":false,"centeredSlides":true,"initialSlide":1,"thumb":{"slidesPerView":4,"spaceBetween":8,"freeMode":true,"loop":false,"watchSlidesProgress":true,"watchSlidesVisibility":true,"grabCursor":true,"breakpoints":{"540":{"slidesPerView":7},"768":{"slidesPerView":8},"1200":{"slidesPerView":9}}}}'>
+                            <div class="swiper-wrapper align-items-center" id="gallery-slider-ecommerce">
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape ecommerce">
+                                    <a href="../../assets/img/gallery/100.png" data-gallery="gallery-slider-ecommerce"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/100.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Nature</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden portrait ecommerce">
+                                    <a href="../../assets/img/gallery/102.png" data-gallery="gallery-slider-ecommerce"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/102.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Sunset</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape ecommerce photography">
+                                    <a href="../../assets/img/gallery/104.png" data-gallery="gallery-slider-ecommerce"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/104.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Sunset Horizon</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden square ecommerce photography">
+                                    <a href="../../assets/video/2.mp4" data-gallery="gallery-slider-ecommerce">
+                                        <div class="video-container h-100">
+                                            <video class="video w-100 h-100 object-fit-cover overflow-hidden rounded-2" muted="muted" data-play-on-hover="data-play-on-hover" poster="../../assets/video/2.png">
+                                                <source src="../../assets/video/2.mp4" type="video/mp4" />
+                                            </video>
+                                            <div class="circle-icon-item position-absolute top-50 start-50 translate-middle bg-body-emphasis rounded-pill bg-opacity-50"><span class="fa-solid fa-video text-body fs-9 fs-sm-8"></span></div>
+                                        </div><img class="d-none" src="../../assets/video/2.png" alt="" />
+                                    </a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Bike Ride</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-nav">
+                            <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                            <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="project-management-tab-pane" role="tabpanel" aria-labelledby="project-management-tab" tabindex="0">
+                    <div class="swiper-theme-container swiper-slider-gallery">
+                        <div class="swiper theme-slider" data-swiper='{"speed":500,"spaceBetween":16,"slidesPerView":"auto","simulateTouch":false,"centeredSlides":true,"initialSlide":1,"thumb":{"slidesPerView":4,"spaceBetween":8,"freeMode":true,"loop":false,"watchSlidesProgress":true,"watchSlidesVisibility":true,"grabCursor":true,"breakpoints":{"540":{"slidesPerView":7},"768":{"slidesPerView":8},"1200":{"slidesPerView":9}}}}'>
+                            <div class="swiper-wrapper align-items-center" id="gallery-slider-project-management">
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden square project-management">
+                                    <a href="../../assets/img/gallery/103.png" data-gallery="gallery-slider-project-management"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/103.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Ear Buds</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden portrait project-management photography">
+                                    <a href="../../assets/img/gallery/71.png" data-gallery="gallery-slider-project-management"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/71.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Sunset</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape project-management">
+                                    <a href="../../assets/video/3.mp4" data-gallery="gallery-slider-project-management">
+                                        <div class="video-container h-100">
+                                            <video class="video w-100 h-100 object-fit-cover overflow-hidden rounded-2" muted="muted" data-play-on-hover="data-play-on-hover" poster="../../assets/video/3.png">
+                                                <source src="../../assets/video/3.mp4" type="video/mp4" />
+                                            </video>
+                                            <div class="circle-icon-item position-absolute top-50 start-50 translate-middle bg-body-emphasis rounded-pill bg-opacity-50"><span class="fa-solid fa-video text-body fs-9 fs-sm-8"></span></div>
+                                        </div><img class="d-none" src="../../assets/video/3.png" alt="" />
+                                    </a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Mountain Sunset</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden portrait project-management">
+                                    <a href="../../assets/img/gallery/66.png" data-gallery="gallery-slider-project-management"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/66.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Desert Photography</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden square project-management">
+                                    <a href="../../assets/img/gallery/42.png" data-gallery="gallery-slider-project-management"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/42.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">London</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-nav">
+                            <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                            <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="photography-tab-pane" role="tabpanel" aria-labelledby="photography-tab" tabindex="0">
+                    <div class="swiper-theme-container swiper-slider-gallery">
+                        <div class="swiper theme-slider" data-swiper='{"speed":500,"spaceBetween":16,"slidesPerView":"auto","simulateTouch":false,"centeredSlides":true,"initialSlide":1,"thumb":{"slidesPerView":4,"spaceBetween":8,"freeMode":true,"loop":false,"watchSlidesProgress":true,"watchSlidesVisibility":true,"grabCursor":true,"breakpoints":{"540":{"slidesPerView":7},"768":{"slidesPerView":8},"1200":{"slidesPerView":9}}}}'>
+                            <div class="swiper-wrapper align-items-center" id="gallery-slider-photography">
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape photography">
+                                    <a href="../../assets/img/gallery/101.png" data-gallery="gallery-slider-photography"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/101.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Pixel 4</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape ecommerce photography">
+                                    <a href="../../assets/img/gallery/104.png" data-gallery="gallery-slider-photography"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/104.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Sunset Horizon</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden portrait project-management photography">
+                                    <a href="../../assets/img/gallery/71.png" data-gallery="gallery-slider-photography"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/71.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Sunset</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden landscape photography">
+                                    <a href="../../assets/img/gallery/105.png" data-gallery="gallery-slider-photography"> <img class="w-100 h-100 object-fit-cover" src="../../assets/img/gallery/105.png" alt="" /></a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Ear Buds</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide position-relative rounded-2 overflow-hidden square ecommerce photography">
+                                    <a href="../../assets/video/2.mp4" data-gallery="gallery-slider-photography">
+                                        <div class="video-container h-100">
+                                            <video class="video w-100 h-100 object-fit-cover overflow-hidden rounded-2" muted="muted" data-play-on-hover="data-play-on-hover" poster="../../assets/video/2.png">
+                                                <source src="../../assets/video/2.mp4" type="video/mp4" />
+                                            </video>
+                                            <div class="circle-icon-item position-absolute top-50 start-50 translate-middle bg-body-emphasis rounded-pill bg-opacity-50"><span class="fa-solid fa-video text-body fs-9 fs-sm-8"></span></div>
+                                        </div><img class="d-none" src="../../assets/video/2.png" alt="" />
+                                    </a>
+                                    <div class="backdrop-faded d-flex justify-content-between p-5">
+                                        <div>
+                                            <h3 class="text-white mb-2">Bike Ride</h3>
+                                            <p class="mb-0 text-secondary-light">Description text</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-1 dropdown-toggle dropdown-caret-none text-white" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-nav">
+                            <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                            <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swiper-theme-container" style="height:400px">
+                <div class="swiper theme-slider" style="height:400px" data-swiper='{"autoplay":true,"spaceBetween":5,"loop":true,"loopedSlides":5,"slideToClickedSlide":true}'>
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide"><img class="rounded-1 img-fluid"  src="../../../assets/img/generic/30.jpg" alt="" /></div>
+                        <div class="swiper-slide"> <img class="rounded-1 img-fluid" src="../../../assets/img/generic/31.jpg" alt="" /></div>
+                        <div class="swiper-slide"> <img class="rounded-1 img-fluid" src="../../../assets/img/generic/32.jpg" alt="" /></div>
+                        <div class="swiper-slide"> <img class="rounded-1 img-fluid" src="../../../assets/img/generic/33.jpg" alt="" /></div>
+                        <div class="swiper-slide"> <img class="rounded-1 img-fluid" src="../../../assets/img/generic/34.jpg" alt="" /></div>
+                        <div class="swiper-slide"> <img class="rounded-1 img-fluid" src="../../../assets/img/generic/35.jpg" alt="" /></div>
+                    </div>
+                </div>
+                <div class="swiper-nav">
+                    <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                    <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                </div>
+            </div>
+         
+        </div>
+        <div class="row g-4 mb-6">
+            <div class="col-12 col-lg-12 col-xxl-12">
+                <div class="d-flex flex-between-center mb-3">
+                    <div class="d-flex">
+                        <span class="fas fa-bolt text-warning fs-6"></span>
+                        <h3 class="mx-2">Top Suggestions</h3><span class="fas fa-bolt text-warning fs-6"></span>
+                    </div><a class="btn btn-link btn-lg p-0 d-none d-md-block" href="#!">Explore more<span class="fas fa-chevron-right fs-9 ms-1"></span></a>
+                </div>
+                
+                <div class="swiper-theme-container products-slider">
+                    <div class="swiper swiper theme-slider" data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"768":{"slidesPerView":3,"spaceBetween":20},"1200":{"slidesPerView":4,"spaceBetween":16},"1540":{"slidesPerView":5,"spaceBetween":16}}}'>
+                        <div class="swiper-wrapper">
+
+                            @foreach(var item in Model.TopSuggestedProducts)
+                            {
+                                <div class="swiper-slide">
+                                    <div class="position-relative text-decoration-none product-card h-100">
+                                        <div class="d-flex flex-column justify-content-between h-100">
+                                            <div>
+                                                <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                                    <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist"><span class="fas fa-heart d-block-hover" data-fa-transform="down-1"></span><span class="far fa-heart d-none-hover" data-fa-transform="down-1"></span></button>
+                                                    <img class="object-fit-cover overflow-hidden  img-fluid" src="@item.Images.FirstOrDefault().Image" alt="" />
+                                                </div><a class="stretched-link" asp-action="Details" asp-controller="product" asp-route-id="@item.Id">
+                                                    <h6 class="mb-2 lh-sm line-clamp-3 product-name">@item.Title</h6>
+                                                </a>
+                                                <p class="fs-9">
+                                                
+                                                <span class="badge badge-phoenix-warning">@item.Condition</span>
+                                                    <span class="text-warning">  ( @item.ProductViews people viewd )</span>
+                            
+                                              </p>
+                                            </div>
+                                            <div>
+                                                <p class="fs-9 text-body-highlight fw-bold mb-2">@item.Category.Name > @item.SubCategory.Name</p>
+                                                <div class="d-flex align-items-center mb-1">
+                                                    @if(item.IsDiscount==true)
+                                                    {
+
+
+                                                        <p class="me-2 text-body text-decoration-line-through mb-0">@item.Price.ToString("C")</p>
+                                                        <h3 class="text-body-emphasis mb-0">@item.DiscountedPrice.ToString("C")</h3>
+
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <h3 class="text-body-emphasis mb-0">@item.Price.ToString("C")</h3>
+
+                                                        
+                                                    }
+
+                                                    
+                                                    
+                                                </div>
+                                                <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">@item.Location</p>
+
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+                         
+                        </div>
+                    </div>
+                    <div class="swiper-nav swiper-product-nav">
+                        <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                        <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                    </div>
+                </div><a class="fw-bold d-md-none px-0" href="#!">Explore more<span class="fas fa-chevron-right fs-9 ms-1"></span></a>
+            </div>
+           
+        </div>
+        @foreach(var cat in Model.ProductByCategory)
+        {
+            @if (cat.Products.Count > 0)
+            {
+                <div class="mb-6">
+                    <div class="d-flex flex-between-center mb-3">
+                        <h3>Top @cat.Category.Name</h3><a class="fw-bold d-none d-md-block" href="#!">Explore more<span class="fas fa-chevron-right fs-9 ms-1"></span></a>
+                    </div>
+                    <div class="swiper-theme-container products-slider">
+                        <div class="swiper swiper theme-slider" data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"576":{"slidesPerView":3,"spaceBetween":20},"768":{"slidesPerView":4,"spaceBetween":20},"992":{"slidesPerView":5,"spaceBetween":20},"1200":{"slidesPerView":6,"spaceBetween":16}}}'>
+                            <div class="swiper-wrapper">
+                                @foreach (var item in cat.Products)
+                            {
+                                <div class="swiper-slide">
+                                    <div class="position-relative text-decoration-none product-card h-100">
+                                        <div class="d-flex flex-column justify-content-between h-100">
+                                            <div>
+                                                <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                                        <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist"><span class="fas fa-heart d-block-hover" data-fa-transform="down-1"></span><span class="far fa-heart d-none-hover" data-fa-transform="down-1"></span></button><img class="object-fit-cover overflow-hidden  img-fluid" src="@item.Images.FirstOrDefault().Image" alt="" />
+                                                    </div><a class="stretched-link" asp-action="Details" asp-controller="product" asp-route-id="@item.Id">
+                                                    <h6 class="mb-2 lh-sm line-clamp-3 product-name">@item.Title</h6>
+                                                </a>
+                                                <p class="fs-9">
+
+                                                        <span class="badge badge-phoenix-warning">@item.Condition</span>
+
+                                                        <span class="text-warning">  ( @item.ProductViews people viewd )</span>
+                            
+                                              </p>
+                                            </div>
+                                            <div>
+                                                <p class="fs-9 text-body-highlight fw-bold mb-2">@item.Category.Name > @item.SubCategory.Name</p>
+                                                <div class="d-flex align-items-center mb-1">
+                                                    @if(item.IsDiscount==true)
+                                                    {
+
+
+                                                        <p class="me-2 text-body text-decoration-line-through mb-0">@item.Price.ToString("C")</p>
+                                                        <h3 class="text-body-emphasis mb-0">@item.DiscountedPrice.ToString("C")</h3>
+
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <h3 class="text-body-emphasis mb-0">@item.Price.ToString("C")</h3>
+
+                                                        
+                                                    }
+
+                                                    
+                                                    
+                                                </div>
+                                                    <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">@item.Location</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+                         
+                            </div>
+                        </div>
+                        <div class="swiper-nav">
+                            <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                            <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                        </div>
+                    </div><a class="fw-bold d-md-none" href="#!">Explore more<span class="fas fa-chevron-right fs-9 ms-1"></span></a>
+           
+                </div>
+
+            }
+            
+        }
+       
+       
+        <div class="row flex-center mb-15 mt-11 gy-6">
+            <div class="col-auto"><img class="d-dark-none" src="../../../assets/img/spot-illustrations/light_30.png" alt="" width="305" /><img class="d-light-none" src="../../../assets/img/spot-illustrations/dark_30.png" alt="" width="305" /></div>
+            <div class="col-auto">
+                <div class="text-center text-lg-start">
+                    <h3 class="text-body-highlight mb-2"><span class="fw-semibold">Want to have the </span>ultimate <br class="d-md-none" />customer experience?</h3>
+                    <h1 class="display-3 fw-semibold mb-4">Become a <span class="text-primary fw-bolder">member </span>today!</h1><a class="btn btn-lg btn-primary px-7" href="../../../pages/authentication/simple/sign-up.html">Sign up<span class="fas fa-chevron-right ms-2 fs-9"></span></a>
+                </div>
+            </div>
+        </div>
+    </div><!-- end of .container-->
+</section><!-- <section> close ============================-->
+<!-- ============================================-->

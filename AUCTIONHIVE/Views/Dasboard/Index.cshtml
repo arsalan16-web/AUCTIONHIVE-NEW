@@ -1,0 +1,85 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "/Views/Shared/_Dashboard.cshtml";
+}
+
+<div class="content">
+    <h1>hello</h1>
+    <h1>Real-time Speech-to-Text</h1>
+    <button id="startSpeech">Start Speaking</button>
+    <button id="stopSpeech" disabled>Stop Speaking</button>
+    <div id="output"></div>
+    <div id="stopDiv"></div>
+    <pre class=" language-csharp"><code class="line-numbers  language-csharp"><span class="token operator">&lt;</span><span class="token operator">!</span>DOCTYPE html<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token class-name">html</span> lang<span class="token operator">=</span><span class="token string">"en"</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>head<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token class-name">meta</span> charset<span class="token operator">=</span><span class="token string">"UTF-8"</span><span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span>title<span class="token operator">&gt;</span>Real<span class="token operator">-</span>time Speech<span class="token operator">-</span>to<span class="token operator">-</span>Text<span class="token operator">&lt;</span><span class="token operator">/</span>title<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>head<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span>body<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span>h1<span class="token operator">&gt;</span>Real<span class="token operator">-</span>time Speech<span class="token operator">-</span>to<span class="token operator">-</span>Text<span class="token operator">&lt;</span><span class="token operator">/</span>h1<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token class-name">button</span> id<span class="token operator">=</span><span class="token string">"startSpeech"</span><span class="token operator">&gt;</span>Start Speaking<span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token class-name">button</span> id<span class="token operator">=</span><span class="token string">"stopSpeech"</span> disabled<span class="token operator">&gt;</span>Stop Speaking<span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token class-name">div</span> id<span class="token operator">=</span><span class="token string">"output"</span><span class="token operator">&gt;</span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token class-name">div</span> id<span class="token operator">=</span><span class="token string">"stopDiv"</span><span class="token operator">&gt;</span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>body<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>html<span class="token operator">&gt;</span>
+    </code></pre>
+    <pre class=" language-csharp"><code class="line-numbers  language-csharp"><span class="token operator">&lt;</span>script<span class="token operator">&gt;</span>
+    document<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span>'DOMContentLoaded'<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> startSpeechButton <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span>'startSpeech'<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> stopSpeechButton <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span>'stopSpeech'<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> outputDiv <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span>'output'<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> stopDiv <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span>'stopDiv'<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">let</span> recognition <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">webkitSpeechRecognition</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// For WebKit browsers like Chrome</span>
+
+        recognition<span class="token punctuation">.</span>continuous <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        recognition<span class="token punctuation">.</span>lang <span class="token operator">=</span> 'en<span class="token operator">-</span>US'<span class="token punctuation">;</span>
+
+        recognition<span class="token punctuation">.</span>onstart <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+            outputDiv<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> 'Listening<span class="token range operator">..</span><span class="token punctuation">.</span>'<span class="token punctuation">;</span>
+            startSpeechButton<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+            stopSpeechButton<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+        recognition<span class="token punctuation">.</span>onresult <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> transcript <span class="token operator">=</span> <span class="token keyword">event</span><span class="token punctuation">.</span>results<span class="token punctuation">[</span><span class="token keyword">event</span><span class="token punctuation">.</span>results<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>transcript<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>outputDiv<span class="token punctuation">.</span>innerHTML <span class="token operator">==</span> <span class="token string">"Listening..."</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                outputDiv<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+            outputDiv<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> outputDiv<span class="token punctuation">.</span>innerHTML <span class="token operator">+</span> <span class="token string character">' '</span> <span class="token operator">+</span> transcript<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+        recognition<span class="token punctuation">.</span>onerror <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+            outputDiv<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> '<span class="token class-name">Error</span> occurred<span class="token punctuation">:</span> ' <span class="token operator">+</span> <span class="token keyword">event</span><span class="token punctuation">.</span>error<span class="token punctuation">;</span>
+    <span class="token function">stopSpeech</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+        recognition<span class="token punctuation">.</span>onend <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+            stopDiv<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> 'Speech recognition stopped<span class="token punctuation">.</span>'<span class="token punctuation">;</span>
+            startSpeechButton<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+            stopSpeechButton<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+        startSpeechButton<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span>'click'<span class="token punctuation">,</span> startSpeech<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        stopSpeechButton<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span>'click'<span class="token punctuation">,</span> stopSpeech<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token return-type class-name">function</span> <span class="token function">startSpeech</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            recognition<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token return-type class-name">function</span> <span class="token function">stopSpeech</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            recognition<span class="token punctuation">.</span><span class="token function">stop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">&gt;</span>
+    </code></pre>
+</div>
+
+@section Scripts{
+    <script> document.addEventListener('DOMContentLoaded', (event) => { const startSpeechButton = document.getElementById('startSpeech'); const stopSpeechButton = document.getElementById('stopSpeech'); const outputDiv = document.getElementById('output'); const stopDiv = document.getElementById('stopDiv'); let recognition = new webkitSpeechRecognition(); // For WebKit browsers like Chrome
+    recognition.continuous = true; recognition.lang = 'en-US'; recognition.onstart = () => { outputDiv.innerHTML = 'Listening...'; startSpeechButton.disabled = true; stopSpeechButton.disabled = false; }; recognition.onresult = (event) => { const transcript = event.results[event.results.length - 1][0].transcript; if (outputDiv.innerHTML == "Listening...") { outputDiv.innerHTML = ""; } outputDiv.innerHTML = outputDiv.innerHTML + ' ' + transcript; }; recognition.onerror = (event) => { outputDiv.innerHTML = 'Error occurred: ' + event.error; stopSpeech(); }; recognition.onend = () => { stopDiv.innerHTML = 'Speech recognition stopped.'; startSpeechButton.disabled = false; stopSpeechButton.disabled = true; }; startSpeechButton.addEventListener('click', startSpeech); stopSpeechButton.addEventListener('click', stopSpeech); function startSpeech() { recognition.start(); } function stopSpeech() { recognition.stop(); } }); </script>
+}

@@ -1,0 +1,204 @@
+﻿@model AUCTIONHIVE.ViewModels.ProductsModel
+@{
+    ViewBag.Title = Model.Id != null ? "Edit Product" : "Add Product";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    var categories = ViewBag.Categories as List<Category>;
+    var subCategories = ViewBag.SubCategories as List<SubCategory>;
+    var auctions = ViewBag.ScheduledAuctions as List<ScheduledAuction>;
+}
+<div class="content">
+    <div class="card card-body">
+
+
+        <h2>@ViewBag.Title</h2>
+        <br />
+
+        <form asp-action="AddEditProduct" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" type="text" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+
+                </div>
+                <br />
+                <div class="form-group col-md-6">
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <br />
+            </div>
+            <br />
+
+            <div class="row">
+
+
+                <div class="form-group col-md-6">
+                    <label asp-for="CategoryId">Category</label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))" id="categoryDropdown">
+                        <option value="">-- Select Category --</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+                <br />
+
+                <div class="form-group col-md-6">
+                    <label asp-for="SubCategoryId">Sub Category</label>
+                    <select asp-for="SubCategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.SubCategories, "Id", "Name"))" id="subCategoryDropdown">
+                        <option value="">-- Select Subcategory --</option>
+                    </select>
+                    <span asp-validation-for="SubCategoryId" class="text-danger"></span>
+                </div>
+                <br />
+
+            </div>
+            <br />
+
+            <div class="row">
+
+
+                <div class="form-group col-md-6">
+                    <label asp-for="Condition"></label>
+                    <select asp-for="Condition" class="form-control">
+                        <option value="New">New</option>
+                        <option value="Used">Used</option>
+                    </select>
+                    <span asp-validation-for="Condition" class="text-danger"></span>
+                </div>
+                <br />
+
+                <div class="form-group col-md-6">
+                    <label asp-for="Status"></label>
+                    <select asp-for="Status" class="form-control">
+                        <option value="Active">Active</option>
+                        <option value="InActive">InActive</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <br />
+            </div>
+            <br />
+
+            <div class="row">
+
+                <div class="form-group col-md-6">
+                    <input asp-for="IsAuction" class="form-check-input" type="checkbox" id="isAuctionCheckbox" />
+                    <label asp-for="IsAuction" class="form-check-label"></label>
+                    <span asp-validation-for="IsAuction" class="text-danger"></span>
+                </div>
+                <br />
+
+                <div class="form-group col-md-6" id="videoStreamingContainer">
+                    <input asp-for="IsVideoStreaming" class="form-check-input" type="checkbox" id="isVideoStreamingCheckbox" />
+                    <label asp-for="IsVideoStreaming" class="form-check-label"></label>
+                    <span asp-validation-for="IsVideoStreaming" class="text-danger"></span>
+                </div>
+                <br />
+
+
+            </div>
+            <br />
+
+            <div class="form-group ">
+                <label asp-for="BiddingFee"></label>
+                <input asp-for="BiddingFee" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="BiddingFee" class="text-danger"></span>
+
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <br />
+
+            <div class="form-group">
+                <label asp-for="Location"> Address</label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <br />
+
+
+
+            
+            @* <div class="form-group">
+                <label asp-for="ScheduledAuctionId"></label>
+                <select asp-for="ScheduledAuctionId" class="form-control" asp-items="@(new SelectList(auctions, "Id", "Title"))">
+                    <option value="">-- Select Auction --</option>
+                </select>
+                <span asp-validation-for="ScheduledAuctionId" class="text-danger"></span>
+            </div> *@
+
+            <div class="form-group">
+                <label>Product Images</label>
+                <input type="file" name="uploadedImages" class="form-control" multiple />
+                @if (Model.Images != null && Model.Images.Any())
+                {
+                    <div class="mt-2">
+                        @foreach (var img in Model.Images)
+                        {
+                            <img src="@img.Image" alt="Product Image" style="height: 100px; margin-right: 10px;" />
+                        }
+                    </div>
+                }
+            </div>
+            <br />
+
+            <div class="form-group ">
+                <button type="submit" class="btn btn-primary me-2">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='@Url.Action("Index", "Product")'">Cancel</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#categoryDropdown').change(function () {
+                var categoryId = $(this).val();
+                if (categoryId) {
+                    $.ajax({
+                        url: '@Url.Action("GetSubCategories", "Product")',
+                        type: 'GET',
+                        data: { categoryId: categoryId },
+                        success: function (data) {
+                            var subCatDropdown = $('#subCategoryDropdown');
+                            subCatDropdown.empty();
+                            subCatDropdown.append('<option value="">-- Select Subcategory --</option>');
+                            $.each(data, function (index, item) {
+                                subCatDropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
+                            });
+                        },
+                        error: function () {
+                            alert('Failed to load subcategories.');
+                        }
+                    });
+                } else {
+                    $('#subCategoryDropdown').empty().append('<option value="">-- Select Subcategory --</option>');
+                }
+            });
+             function toggleStreaming() {
+                if ($('#isAuctionCheckbox').is(':checked')) {
+                    $('#videoStreamingContainer').show();
+                } else {
+                    $('#videoStreamingContainer').hide();
+                    $('#isVideoStreamingCheckbox').prop('checked', false); // optional: uncheck if hiding
+                }
+            }
+
+            // Call on load in case of edit mode
+            toggleStreaming();
+
+            // Bind change event
+            $('#isAuctionCheckbox').change(function () {
+                toggleStreaming();
+            });
+        });
+    </script>
+}
