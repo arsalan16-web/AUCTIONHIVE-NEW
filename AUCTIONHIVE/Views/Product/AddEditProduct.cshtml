@@ -12,29 +12,50 @@
 
         <h2>@ViewBag.Title</h2>
         <br />
-
         <form asp-action="AddEditProduct" method="post" enctype="multipart/form-data">
+            @* Hidden fields *@
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="StreamId" />
+            <input type="hidden" asp-for="BidPer" id="bidPer" />
+
+            <!-- Title & Price -->
             <div class="row">
                 <div class="form-group col-md-6">
                     <label asp-for="Title"></label>
                     <input asp-for="Title" type="text" class="form-control" />
                     <span asp-validation-for="Title" class="text-danger"></span>
-
                 </div>
-                <br />
                 <div class="form-group col-md-6">
                     <label asp-for="Price"></label>
-                    <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                    <input asp-for="Price" class="form-control" id="price" type="number" step="0.01" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
-                <br />
             </div>
             <br />
-
             <div class="row">
+                 <div class="form-group col-md-12">
+                    <input asp-for="IsDiscount" class="form-check-input" type="checkbox" id="isDiscount" />
+                    <label asp-for="IsDiscount" class="form-check-label">Apply Discount</label>
+                </div>
 
+            </div>
+            <!-- Discount Section -->
+            <div class="row mt-3">
+               
+                <div class="form-group col-md-6  d-none" id="discountedSection">
+                    <label asp-for="DiscountedPrice">Discount %</label>
+                    <input asp-for="DiscountedPrice" class="form-control" id="discountPercentage" type="number" step="0.01" />
+                    <span asp-validation-for="DiscountedPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6" >
+                    <label asp-for="Discounted">Discounted Price</label>
+                    <input asp-for="Discounted" class="form-control" id="discountedPrice" type="number" step="0.01" readonly />
+                    <span asp-validation-for="Discounted" class="text-danger"></span>
+                </div>
+            </div>
 
+            <!-- Category & SubCategory -->
+            <div class="row mt-3">
                 <div class="form-group col-md-6">
                     <label asp-for="CategoryId">Category</label>
                     <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))" id="categoryDropdown">
@@ -42,8 +63,6 @@
                     </select>
                     <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
-                <br />
-
                 <div class="form-group col-md-6">
                     <label asp-for="SubCategoryId">Sub Category</label>
                     <select asp-for="SubCategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.SubCategories, "Id", "Name"))" id="subCategoryDropdown">
@@ -51,14 +70,10 @@
                     </select>
                     <span asp-validation-for="SubCategoryId" class="text-danger"></span>
                 </div>
-                <br />
-
             </div>
-            <br />
 
-            <div class="row">
-
-
+            <!-- Condition & Status -->
+            <div class="row mt-3">
                 <div class="form-group col-md-6">
                     <label asp-for="Condition"></label>
                     <select asp-for="Condition" class="form-control">
@@ -67,8 +82,6 @@
                     </select>
                     <span asp-validation-for="Condition" class="text-danger"></span>
                 </div>
-                <br />
-
                 <div class="form-group col-md-6">
                     <label asp-for="Status"></label>
                     <select asp-for="Status" class="form-control">
@@ -77,63 +90,57 @@
                     </select>
                     <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
-                <br />
             </div>
-            <br />
 
-            <div class="row">
-
+            <!-- Auction & Streaming -->
+            <div class="row mt-3">
                 <div class="form-group col-md-6">
                     <input asp-for="IsAuction" class="form-check-input" type="checkbox" id="isAuctionCheckbox" />
-                    <label asp-for="IsAuction" class="form-check-label"></label>
+                    <label asp-for="IsAuction" class="form-check-label">Is Auction</label>
                     <span asp-validation-for="IsAuction" class="text-danger"></span>
                 </div>
-                <br />
-
-                <div class="form-group col-md-6" id="videoStreamingContainer">
+                <div class="form-group col-md-6">
                     <input asp-for="IsVideoStreaming" class="form-check-input" type="checkbox" id="isVideoStreamingCheckbox" />
-                    <label asp-for="IsVideoStreaming" class="form-check-label"></label>
+                    <label asp-for="IsVideoStreaming" class="form-check-label">Is Live Stream</label>
                     <span asp-validation-for="IsVideoStreaming" class="text-danger"></span>
                 </div>
-                <br />
-
-
             </div>
-            <br />
 
-            <div class="form-group ">
+            <!-- Streaming/Auction Time Range -->
+            <div class="row mt-3 d-none" id="timeFields">
+                <div class="form-group col-md-6">
+                    <label asp-for="StartTime">Start Time</label>
+                    <input asp-for="StartTime" type="datetime-local" class="form-control" id="startTime" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="EndTime">End Time</label>
+                    <input asp-for="EndTime" type="datetime-local" class="form-control" id="endTime" />
+                </div>
+            </div>
+
+            <!-- Bidding Fee -->
+            <div class="form-group mt-3" id="bidingfee">
                 <label asp-for="BiddingFee"></label>
-                <input asp-for="BiddingFee" class="form-control" type="number" step="0.01" />
+                <input asp-for="BiddingFee" id="fee" class="form-control" type="number" step="0.01" readonly/>
                 <span asp-validation-for="BiddingFee" class="text-danger"></span>
-
             </div>
-            <br />
-            <div class="form-group">
+
+            <!-- Description -->
+            <div class="form-group mt-3">
                 <label asp-for="Description"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
+                <textarea asp-for="Description" class="form-control" id="descriptionEditor"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <br />
 
-            <div class="form-group">
-                <label asp-for="Location"> Address</label>
+            <!-- Location -->
+            <div class="form-group mt-3">
+                <label asp-for="Location">Address</label>
                 <input asp-for="Location" class="form-control" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
-            <br />
 
-
-
-            
-            @* <div class="form-group">
-                <label asp-for="ScheduledAuctionId"></label>
-                <select asp-for="ScheduledAuctionId" class="form-control" asp-items="@(new SelectList(auctions, "Id", "Title"))">
-                    <option value="">-- Select Auction --</option>
-                </select>
-                <span asp-validation-for="ScheduledAuctionId" class="text-danger"></span>
-            </div> *@
-
-            <div class="form-group">
+            <!-- Product Images -->
+            <div class="form-group mt-3">
                 <label>Product Images</label>
                 <input type="file" name="uploadedImages" class="form-control" multiple />
                 @if (Model.Images != null && Model.Images.Any())
@@ -146,19 +153,51 @@
                     </div>
                 }
             </div>
-            <br />
 
-            <div class="form-group ">
+            <!-- Action Buttons -->
+            <div class="form-group mt-4">
                 <button type="submit" class="btn btn-primary me-2">Save</button>
                 <button type="button" class="btn btn-secondary" onclick="window.location.href='@Url.Action("Index", "Product")'">Cancel</button>
             </div>
-
         </form>
+
 
     </div>
 </div>
 @section Scripts {
+    <!-- jQuery (required by Summernote) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Summernote JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js"></script>
+
     <script>
+        $(document).ready(function () {
+            $('#descriptionEditor').summernote({
+                height: 200,
+                placeholder: 'Enter product description here...',
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview']]
+                ]
+            });
+        });
+    </script>
+    <script>
+        function updateBiddingFee() {
+               if ($('#isAuctionCheckbox').is(':checked')) {
+                   $('#fee').val('');
+                   const bidPer = parseFloat($('#bidPer').val()) || 0;
+                   const discountedPrice = parseFloat($('#discountedPrice').val()) || 0;
+
+                   const fee = (discountedPrice * bidPer) / 100;
+                   $('#fee').val(fee.toFixed(2));
+               }
+           }
+         
         $(document).ready(function () {
             $('#categoryDropdown').change(function () {
                 var categoryId = $(this).val();
@@ -186,8 +225,11 @@
              function toggleStreaming() {
                 if ($('#isAuctionCheckbox').is(':checked')) {
                     $('#videoStreamingContainer').show();
+                    $('#bidingfee').show();
                 } else {
                     $('#videoStreamingContainer').hide();
+                    $('#fee').val("");
+                    $('#bidingfee').hide();
                     $('#isVideoStreamingCheckbox').prop('checked', false); // optional: uncheck if hiding
                 }
             }
@@ -198,6 +240,148 @@
             // Bind change event
             $('#isAuctionCheckbox').change(function () {
                 toggleStreaming();
+            });
+        });
+
+         function updateDiscountedPrice() {
+            debugger;
+            const price = parseFloat($('#price').val()) || 0;
+            const isDiscount = $('#isDiscount').is(':checked');
+           
+            if (isDiscount) {
+                $('#discountedSection').removeClass('d-none');
+                const percentage = parseFloat($('#discountPercentage').val()) || 0;
+                const discount = (price * percentage) / 100;
+                const discountedPrice = price - discount;
+                $('#discountedPrice').val(discountedPrice.toFixed(2));
+            } else {
+                $('#discountedPrice').val(price.toFixed(2));
+            }
+        }
+
+        $(document).ready(function () {
+
+            // Sync price to discountedPrice on load
+            updateDiscountedPrice();
+
+            // Show/hide discount input on checkbox toggle
+            $('#isDiscount').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#discountedSection').removeClass('d-none');
+                } else {
+                    $('#discountedSection').addClass('d-none');
+                    $('#discountPercentage').val('');
+                }
+                updateDiscountedPrice();
+            });
+
+            // Bind updates on input changes
+            $('#price, #discountPercentage').on('input', function () {
+                updateDiscountedPrice();
+                 updateBiddingFee();
+            });
+        });
+
+
+        function toggleTimeFields() {
+            const isAuction = $('#isAuctionCheckbox').is(':checked');
+            const isStream = $('#isVideoStreamingCheckbox').is(':checked');
+
+            if (isAuction || isStream) {
+                $('#timeFields').removeClass('d-none');
+            } else {
+                $('#timeFields').addClass('d-none');
+                $('#startTime, #endTime').val('');
+            }
+        }
+
+                function validateStreamTime() {
+            const isStream = $('#isVideoStreamingCheckbox').is(':checked');
+            if (!isStream) return true;
+
+            const startVal = $('#startTime').val();
+            const endVal = $('#endTime').val();
+
+            if (!startVal || !endVal) return true; // Skip if empty
+
+            const start = new Date(startVal);
+            const end = new Date(endVal);
+
+            const diffInMs = end - start;
+            const diffInHours = diffInMs / (1000 * 60 * 60);
+
+            if (diffInMs <= 0) {
+                alert("End time must be after start time.");
+                $('#endTime').val('');
+                return false;
+            }
+
+            if (diffInHours > 2) {
+                alert("For Live Stream, the duration must not exceed 2 hours.");
+                $('#endTime').val('');
+                return false;
+            }
+
+            return true;
+        }
+
+        $(document).ready(function () {
+            $('#isAuctionCheckbox, #isVideoStreamingCheckbox').on('change', function () {
+                toggleTimeFields();
+                 updateBiddingFee();
+            });
+
+            $('#endTime').on('change', function () {
+                validateStreamTime();
+            });
+
+            // Initialize on page load
+            toggleTimeFields();
+        });
+    </script>
+   
+    <script>
+        let currentUSDRate = 278; // Default fallback if API fails
+
+        // Get live USD rate from free API
+        async function fetchExchangeRate() {
+            try {
+                const response = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+                const data = await response.json();
+                currentUSDRate = data.rates.PKR || 278;
+            } catch (e) {
+                console.warn("Could not fetch exchange rate, using default.");
+            }
+        }
+
+        // Validate entered price against 1 USD worth in PKR
+        function validateMinimumPrice() {
+            const price = parseFloat($('#price').val()) || 0;
+
+            if (price < currentUSDRate) {
+                alert(`Price must be greater than $1 USD (currently about ${currentUSDRate} PKR).`);
+                $('#price').val('');
+                $('#discountedPrice').val('');
+                return false;
+            }
+            return true;
+        }
+
+        $(document).ready(function () {
+            // Fetch exchange rate once when page loads
+            fetchExchangeRate();
+
+            // Validate on price input
+            $('#price').on('change', function () {
+                validateMinimumPrice();
+                 updateBiddingFee();
+            });
+
+            // Optionally: validate on form submit
+            $('form').on('submit', function (e) {
+                if (!validateMinimumPrice()) {
+                    e.preventDefault(); // Stop submission
+                }
             });
         });
     </script>

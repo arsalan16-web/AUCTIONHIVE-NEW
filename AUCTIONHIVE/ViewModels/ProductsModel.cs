@@ -1,5 +1,6 @@
 ﻿using AUCTIONHIVE.Data;
 using AUCTIONHIVE.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AUCTIONHIVE.ViewModels
@@ -17,6 +18,7 @@ namespace AUCTIONHIVE.ViewModels
     public class ProductsModel : ViewModel
     {
         public string SellerId { get; set; } // Foreign Key to User
+        public string StreamId { get; set; } // Foreign Key to User
         public ApplicationUser Seller { get; set; }
         public string Title { get; set; }
         public string CategoryName { get; set; }
@@ -37,5 +39,15 @@ namespace AUCTIONHIVE.ViewModels
         public double BiddingFee { get; set; } = 0;
         public List<Images> Images { get; set; }
 
+        public int ProductViews { get; set; } = 0;
+        public double? BidPer { get; set; } = 0;
+        public int? Discounted { get; set; } = 0;
+        public DateTime StartTime { get; set; } 
+        public DateTime EndTime { get; set; } 
+
+    }
+    public class BidingPerModel : ViewModel
+    {
+        public double BidingPercentage { get; set; } = 0;
     }
 }

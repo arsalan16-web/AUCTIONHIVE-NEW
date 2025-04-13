@@ -4,6 +4,7 @@ using AUCTIONHIVE.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Security.Claims;
@@ -20,51 +21,23 @@ namespace AUCTIONHIVE.Controllers
             _context = context;
         }
         public async Task<IActionResult> Index()
+        
+        
         {
             try
             {
 
 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get logged-in User ID
-
-                //var list= FakeProductGenerator.GenerateFakeProducts(200, userId);
-                //List<ScheduledAuction> li=new List<ScheduledAuction>();
-                //foreach(var item in list.Where(x => x.IsAuction))
-                //{
-                //    if (item.IsAuction)
-                //    {
-                //        ScheduledAuction scheduledAuction = new ScheduledAuction
-                //        {
-                //            ProductId = item.Id,
-                //            Id = Guid.NewGuid().ToString(),
-                //            CreatedAt = DateTime.Now,
-                //            UpdateAt = DateTime.Now,
-                //            CreatedBy = userId,
-                //            UpdatedBy = userId,
-                //            StartTime = DateTime.Now,
-                //            EndTime = DateTime.Now.AddHours(2),
-                //            StreamUrl = "http",
-                //            StreamChannel = "http",
-                //        };
-                //        li.Add(scheduledAuction);
-                //    }
-
-
-                //}
-                //_context.Products.AddRange(list);
-                //await _context.SaveChangesAsync();
-
-                //_context.ScheduledAuctions.AddRange(li);
-                //await _context.SaveChangesAsync();
-
-
-
+                
                 var products = _context.Products.Include(x=>x.Images).Include(s=>s.Category).Include(s=>s.SubCategory).Where(s=>s.CreatedBy ==  userId && s.IsDeleted == false).ToList();
                 ProductsModel model = new ProductsModel();
                 List<ProductsModel> productsList = new List<ProductsModel>();
                 ProductsModel obj;  
+                
                 foreach (var product in products) 
                 {
+
                     obj = new ProductsModel();
                     obj.Id = product.Id;
                     obj.Title = product.Title;
@@ -85,6 +58,9 @@ namespace AUCTIONHIVE.Controllers
                     obj.UpdateAt = product.UpdateAt;
                     obj.UpdatedBy = product.UpdatedBy;
                     obj.IsDeleted = product.IsDeleted;
+                    obj.Images = product.Images;
+                    obj.IsDiscount = product.IsDiscount;
+                    obj.DiscountedPrice = product.DiscountedPrice;
                     productsList.Add(obj);
 
                 }
@@ -97,7 +73,7 @@ namespace AUCTIONHIVE.Controllers
             }
             return View();
         }
-        public IActionResult AddEditProduct(string? id)
+        public async Task<IActionResult> AddEditProduct(string? id)
         {
             try
             {
@@ -120,7 +96,7 @@ namespace AUCTIONHIVE.Controllers
                 {
                     // Edit product
                     var product = _context.Products
-                        .Include(p => p.Images).Include(s => s.Category).Include(s => s.SubCategory)
+                        .Include(p => p.Images).Include(s => s.Category).Include(s => s.SubCategory).Include(s=>s.ScheduledAuction)
                         .FirstOrDefault(p => p.Id == id && p.IsDeleted == false && p.CreatedBy == userId);
 
                     if (product == null)
@@ -141,11 +117,20 @@ namespace AUCTIONHIVE.Controllers
                     model.Images = product.Images;
                     model.IsAuction = product.IsAuction;
                     model.IsVideoStreaming = product.IsVideoStreaming;
+                    model.DiscountedPrice = product.DiscountedPrice;
+                    model.IsDiscount = product.IsDiscount;
+                    model.StreamId =  product.ScheduledAuction.Id;
+                    model.StartTime = product.ScheduledAuction.StartTime;
+                    model.EndTime = product.ScheduledAuction.EndTime;
+                    model.BidPer = _context.BidingPercentages.Where(s => s.IsDeleted == false).Select(s => s.PriceInPer).FirstOrDefault();
+
                     return View(model);
                 }
                 else
                 {
-                    return View(new ProductsModel());
+                    model.BidPer = _context.BidingPercentages.Where(s => s.IsDeleted == false).Select(s => s.PriceInPer).FirstOrDefault();
+
+                    return View(model);
                 }
                 
 
@@ -201,7 +186,18 @@ namespace AUCTIONHIVE.Controllers
                 product.Status = model.Status;
                 product.IsAuction = model.IsAuction;
                 product.IsVideoStreaming = model.IsVideoStreaming;
-                if (product.IsAuction)
+                if (!string.IsNullOrEmpty(model.StreamId))
+                {
+                    var scheduledAuction = _context.ScheduledAuctions.Where(s => s.IsDeleted == false && s.Id == model.StreamId).FirstOrDefault();
+                    if(scheduledAuction != null)
+                    {
+                        scheduledAuction.StartTime = model.StartTime;
+                        scheduledAuction.EndTime = model.EndTime;
+                        scheduledAuction.UpdateAt = DateTime.Now;
+                        scheduledAuction.UpdatedBy = userId;
+                    }
+                }
+                else
                 {
                     ScheduledAuction scheduledAuction = new ScheduledAuction
                     {
@@ -211,17 +207,38 @@ namespace AUCTIONHIVE.Controllers
                         UpdateAt = DateTime.Now,
                         CreatedBy = userId,
                         UpdatedBy = userId,
-                        StartTime =DateTime.Now,
-                        EndTime = DateTime.Now.AddHours(1),
+                        StartTime =model.StartTime,
+                        EndTime = model.EndTime,
                         StreamUrl = "http",
                         StreamChannel = "http",
                     };
                     _context.ScheduledAuctions.Add(scheduledAuction);
                 }
+                    
+                //if (product.IsAuction)
+                //{
+                //    ScheduledAuction scheduledAuction = new ScheduledAuction
+                //    {
+                //        ProductId = product.Id,
+                //        Id = Guid.NewGuid().ToString(),
+                //        CreatedAt =DateTime.Now,
+                //        UpdateAt = DateTime.Now,
+                //        CreatedBy = userId,
+                //        UpdatedBy = userId,
+                //        StartTime =DateTime.Now,
+                //        EndTime = DateTime.Now.AddHours(1),
+                //        StreamUrl = "http",
+                //        StreamChannel = "http",
+                //    };
+                //    _context.ScheduledAuctions.Add(scheduledAuction);
+                //}
                 product.BiddingFee = model.BiddingFee;
                 product.UpdatedBy = userId;
                 product.UpdateAt = DateTime.UtcNow;
-                product.SellerId= "ecaff4b8-f5eb-426f-af6e-43c760753e64";
+                product.SellerId= userId;
+                product.IsDiscount = model.IsDiscount;
+                product.DiscountedPrice = model.DiscountedPrice;
+                  
 
                 // Save uploaded images
                 if (uploadedImages != null && uploadedImages.Any())

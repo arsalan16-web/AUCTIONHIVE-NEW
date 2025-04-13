@@ -1,0 +1,27 @@
+﻿@model BidingPercentage
+@{
+    ViewData["Title"] = "AddEdit";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<div class="content">
+    <div class="card card-body">
+        <div style="margin-bottom:20px;margin-top:10px;">
+            @ViewData["Title"]
+        </div>
+        <form asp-action="AddEdit" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label style="margin-bottom:10px;" asp-for="PriceInPer">Percentage of Biding Price</label>
+                <input asp-for="PriceInPer" class="form-control" />
+                <span asp-validation-for="PriceInPer" class="text-danger"></span>
+            </div>
+            <br />
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+</div>
+
+

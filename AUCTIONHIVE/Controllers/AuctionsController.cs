@@ -146,7 +146,7 @@ namespace AUCTIONHIVE.Controllers
         {
             if (!string.IsNullOrEmpty(auctionid))
             {
-                _notifyService.Success("Payment processing failed...");
+                _notifyService.Error("Payment processing failed...");
 
                 return RedirectToAction("PayAuctionFee", "auctions", new { auctionid = auctionid });
 

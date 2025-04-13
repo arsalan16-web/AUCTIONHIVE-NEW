@@ -3,65 +3,463 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Dashboard.cshtml";
 }
+<style>
+    .product-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
 
+    .carousel-control-prev, .carousel-control-next {
+        background-color: rgba(0,0,0,0.2);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
 <div class="content">
     <div class="card card-body">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end mb-4">
             <a class="btn btn-primary" asp-action="AddEditProduct">Create New</a>
         </div>
 
-
-        <table class="table table-bordered table-striped" id="">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Title</th>
-                    <th>Price</th>
-                    <th>Category</th>
-                    <th>Sub Category</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th>Is Auction</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null && Model.Any())
+        <div class="row" id="product-cards-container">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
                 {
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.Title</td>
-                            <td>@item.Price.ToString("C")</td>
-                            <td>@item.CategoryName</td>
-                            <td>@item.SubCategoryName</td>
-                            <td>@item.Location</td>
-                            <td>@item.Status</td>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+                        <div class="card h-100 product-card clickable-card">
+                            <!-- Image Carousel -->
+                            <div id="carousel-@item.Id" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    @if (item.Images != null && item.Images.Any())
+                                    {
+                                        for (int i = 0; i < item.Images.Count; i++)
+                                        {
+                                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                                <img src="@item.Images[i].Image" class="d-block w-100 card-img-top" alt="Product image" style="height: 200px; object-fit: cover;">
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="carousel-item active">
+                                            <img src="https://via.placeholder.com/300x200?text=No+Image" class="d-block w-100 card-img-top" alt="No image available">
+                                        </div>
+                                    }
+                                </div>
+                                @if (item.Images != null && item.Images.Count > 1)
+                                {
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@item.Id" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-@item.Id" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                }
+                            </div>
 
-                            <td>@(item.IsAuction ? "Yes" : "No")</td>
-                            <td>
-                                <a href="@Url.Action("AddEditProduct", "Product", new { id = item.Id })" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
-                                <button class="btn btn-sm btn-danger delete-product" data-id="@item.Id">
-                                    <i class="fa fa-trash"></i>
-                                </button>
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Title</h5>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-primary me-1">@item.CategoryName</span>
+                                    @if (!string.IsNullOrEmpty(item.SubCategoryName))
+                                    {
+                                        <span class="badge bg-secondary">@item.SubCategoryName</span>
+                                    }
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-success fw-bold">@item.Price.ToString("C")</span>
+                                    <span class="badge @(item.Status == "Active" ? "bg-success" : "bg-warning")">@item.Status</span>
+                                </div>
+                                @if (item.IsAuction)
+                                {
+                                    <div class="mt-2">
+                                        <span class="badge bg-info">Auction</span>
+                                    </div>
+                                }
+                            </div>
 
-                            </td>
-                        </tr>
-                    }
+                            <!-- Footer Hidden by Default -->
+                            <div class="card-footer bg-transparent d-none card-action-footer">
+                                <div class="d-flex justify-content-between">
+                                    <a href="@Url.Action("AddEditProduct", "Product", new { id = item.Id })" class="btn btn-sm btn-warning" title="Edit">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-danger delete-product" data-id="@item.Id" title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    <a href="@Url.Action("Details", "Product", new { id = item.Id })" class="btn btn-sm btn-info" title="View Details">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 }
-               @*  else
-                {
+            }
+            else
+            {
+                <div class="col-12">
                     <div class="alert alert-info">No products found.</div>
-                } *@
-            </tbody>
-
-        </table>
-
+                </div>
+            }
+        </div>
     </div>
 </div>
+
+
+<!-- Add this CSS to your stylesheet or in a style tag -->
+
+@* 
+<div class="content">
+    <div class="card card-body">
+        <div class="row">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <div class="col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Title</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">@item.CategoryName / @item.SubCategoryName</h6>
+                                <p class="card-text">
+                                    <strong>Price:</strong> @item.Price.ToString("C")<br />
+                                    <strong>Location:</strong> @item.Location<br />
+                                    <strong>Status:</strong> @item.Status<br />
+                                    <strong>Is Auction:</strong> @(item.IsAuction ? "Yes" : "No")
+                                </p>
+                                <div class="d-flex justify-content-between">
+                                    <a href="@Url.Action("AddEditProduct", "Product", new { id = item.Id })" class="btn btn-sm btn-warning">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                    <button class="btn btn-sm btn-danger delete-product" data-id="@item.Id">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="alert alert-info">No products found.</div>
+                </div>
+            }
+        </div>
+
+
+    </div>
+</div> *@
+<div class="modal fade" id="exLargeModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-xxl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel4">Generate Invoice</h5>
+                <button id="btnCloseModal" type="button"
+                        class="btn-close"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="pdfff">
+
+                    <div class="col-md-12">
+                        <div class="card" id="invoice">
+
+                            <div class="card-body" id="printdv" style="background-color:white;margin:0px;border:none">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="mb-4 pull-left">
+
+                                            <img src="~/images/Monogram_Letter_G_for_Natural_Logo_Design__1_-transformed-removebg-preview.png" width="170" />
+                                            <ul class="list list-unstyled mb-0 text-left" style="display:none">
+
+                                                <li><span id="hn"></span></li>
+                                                <li><span id="had"></span></li>
+                                                <li><span id="hP"></span></li>
+
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6" style="text-align:right">
+                                        <div class="mb-4">
+                                            <div class="text-sm-right">
+                                                <h4 class="invoice-color mb-2 mt-md-2 text-danger "><span id="whole">Invoice #</span> <span id="invoicenmbr"></span></h4>
+                                                <ul class="list list-unstyled mb-0">
+                                                    <li>Date: <span class="font-weight-semibold" id="month"> </span>  <span id="tdy"> 15</span> ,<span id="year"> 2020</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-md-flex flex-md-wrap">
+                                    <div class="row" style="width:100%">
+                                        <div class="col-md-6">
+
+                                            <div class="mb-4 mb-md-2 ">
+                                                <span class="text-muted" style="font-weight:bold">Invoice To:</span>
+                                                <ul class="list list-unstyled mb-2">
+                                                    <li>
+                                                        <span id="inClientName">Client Name :  </span><span class="font-weight-semibold" id="customername"></span>
+                                                    </li>
+
+
+
+                                                    <li>  <span id="inClientEmail">Client Email : </span><span class="font-weight-semibold" id="customerEmail"></span></li>
+                                                    <li>  <span id="inClientPhone">Client Phone : </span><span class="font-weight-semibold" id="customerPhoneNo"></span></li>
+
+                                                </ul>
+                                                <span class="text-muted" style="font-weight:bold">Sale By:</span>
+                                                <ul class="list list-unstyled mb-0">
+                                                    <li>
+                                                        <span>Sales Person :  </span><span class="font-weight-semibold" id="salePersonNameHere"></span>
+                                                    </li>
+
+
+
+
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-2 text-left">
+                                                <span class="text-muted" style="font-weight:bold">Invoice By:</span>
+                                                <div class="d-flex flex-wrap wmin-md-400">
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li>
+                                                            <span class="font-weight-semibold">Company Name: </span>
+                                                            <span id="compname" class="font-weight-bold"></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="font-weight-semibold">Address: </span>
+                                                            <span id="compadd1"></span>
+                                                        </li>
+                                                        <li>
+                                                            <span id="compadd2"></span>
+                                                        </li>
+                                                        <li>
+                                                            <span id="compadd3"></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="font-weight-semibold">Phone Number: </span>
+                                                            <span id="compph"></span>-<span id="2ndcompph"></span>
+                                                        </li>
+                                                        @*  <li>
+                                                            TCA <span class="font-weight-semibold" id="compgst">0</span> %
+                                                        </li> *@
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                                <div class="table-responsive overflow-hidden">
+                                    <table class="table table-lg" id="invtble">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:10%;">Id</th>
+                                                <th style="width:50%;">Description</th>
+                                                <th style="width:10%;">Qty</th>
+                                                <th style="width:10%;">$ Price</th>
+                                                <th style="width:10%;">HTG Price</th>
+                                                <th style="width:20%;padding-left:45px;">$ Sub Total</th>
+                                                <th style="width:20%;padding-left:45px;">HTG Sub Totl</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Product 1</td>
+                                                <td>15</td>
+                                                <td>1500</td>
+                                                <td>3500</td>
+
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+
+                                            <br>
+                                            <br>
+                                            <div class="row mt-3">
+                                                <div class="col-md-7">
+                                                    <label class="form-check-label "> Select Currency</label>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <select class="form-control form-control-sm" id="currency">
+                                                        <option value="Dollar">Dollar </option>
+                                                        <option value="HTG" selected>HTG</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-7">
+                                                    <label class="form-check-label "> Select Payment</label>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <select class="form-control form-control-sm" id="pay">
+                                                        <option value="CASH ">CASH </option>
+                                                        <option value="CHECK">CHECK</option>
+                                                        <option value="WIRE_TRANSFERT">WIRE TRANSFERT</option>
+                                                        <option value="CREDIT_CARD">CREDIT CARD</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div id="showC" style="display:none">
+                                                <div class="mt-3">
+                                                    <div class="row">
+                                                        <div class="col-md-7">
+                                                            <label class="form-check-label"><b>Credit card surcharge Y/N</b></label>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <select class="form-control form-control-sm" id="sur">
+                                                                <option value="1">No</option>
+                                                                <option value="2">Yes</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-3">
+                                                        <div class="col-md-7">
+                                                            <label class="form-check-label "> Credit card surcharge (%)</label>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <div class="input-group">
+                                                                <input type="number" class="form-control form-control-sm" id="surpercentage" name="address" oninput="GetTotal()" placeholder="%" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="pt-2 mb-3 wmin-md-400 ml-auto">
+                                                <div class="table">
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th class="text-left">Subtotal:</th>
+                                                                <td class="text-right" style="text-align:right"> <span id="gtot"></span> </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="text-left" hidden>TCA: <span class="font-weight-normal">(<span id="gst"></span> %)</span></th>
+                                                                <td class="text-right" hidden style="text-align:right"><span id="gstamount"> </span> </td>
+                                                            </tr>
+
+                                                            <tr id="surId" style="display:none">
+                                                                <th class="text-left">Surcharges: <span class="font-weight-normal">(<span id="spSurcharge"></span> %)</span></th>
+                                                                <td class="text-right" style="text-align:right"><span id="suramount"> </span> </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="text-left">Discount: </th>
+                                                                <td class="text-right" style="text-align:right">
+                                                                    <div class="input-group">
+                                                                        <input type="number" class="form-control" id="disamount" style="text-align: right; width: 50px;">
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text">%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr style="display:none" id="showClientCredit">
+                                                                <th class="text-left">Credit: </th>
+                                                                <td class="text-right" style="text-align:right">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text">$</span>
+
+                                                                        <input type="number" class="form-control" id="creditClient" style="text-align: right; width: 50px;">
+
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+
+
+                                                            <tr>
+                                                                <th class="text-left" style="font-weight:bold">Total:</th>
+                                                                <td class="text-right" style="text-align:right">
+                                                                    <span id="alltotl" style="font-weight:bold;text-align:right"> </span>
+                                                                </td>
+                                                            </tr>
+
+
+                                                        </tbody>
+                                                    </table>
+                                                    <span hidden id="alltotlPrevious" style="font-weight:bold;text-align:right"> </span>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <input type="hidden" id="hiddprice" />
+                                    <input type="hidden" id="hiddFprice" />
+                                    <div class="d-md-flex flex-md-wrap">
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" id="btnCloseInvoice">
+                        Close
+                    </button>
+
+                    <button type="button" class="btn btn-primary" id="complete">Complete</button>
+
+
+                    @*  <form action="@Url.Action("PrintThermalReceipt", "basket")" method="POST">
+                </form> *@
+                    <form action="@Url.Action("GenerateInvoice", "basket")" method="POST">
+                        @* <button type="submit" class="btn btn-primary">Print</button> *@
+                    </form>
+                    <button type="submit" class="btn btn-primary" id="print">Complete & Print</button>
+
+                    <button type="submit" class="btn btn-primary" id="print2">Print</button>
+                    @* <button class="btn btn-primary" onclick="printSlip()">Print Slip</button> *@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -71,12 +469,32 @@
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
+    <script>
+        $(document).ready(function () {
+            $('.clickable-card').click(function (e) {
+                e.stopPropagation(); // Prevent bubbling
+
+                // Hide others
+                $('.card-action-footer').not($(this).find('.card-action-footer')).addClass('d-none');
+
+                // Toggle this one
+                $(this).find('.card-action-footer').toggleClass('d-none');
+            });
+
+            // Optional: Hide footers when clicking outside cards
+            $(document).click(function (e) {
+                if (!$(e.target).closest('.clickable-card').length) {
+                    $('.card-action-footer').addClass('d-none');
+                }
+            });
+        });
+    </script>
 
     <script>
         $(document).ready(function () {
             var table = $("#myTable").DataTable();
         });
-            
+
         $(document).ready(function () {
             $('.delete-product').click(function (e) {
                 e.preventDefault();
@@ -129,5 +547,7 @@
         });
     </script>
 
-    
+   
+                   
+
 }

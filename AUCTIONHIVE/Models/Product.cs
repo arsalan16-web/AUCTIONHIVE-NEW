@@ -70,4 +70,8 @@ namespace AUCTIONHIVE.Models
 
     }
 
+    public class BidingPercentage : BaseClass
+    {
+        public double PriceInPer { get; set; }
+    }
 }

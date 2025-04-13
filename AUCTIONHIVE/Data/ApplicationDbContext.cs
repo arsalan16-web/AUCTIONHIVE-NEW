@@ -16,6 +16,7 @@ namespace AUCTIONHIVE.Data
         public DbSet<Message>  Messages { get; set; }
         public DbSet<Payment>  Payments { get; set; }
         public DbSet<SearchedHistory> SearchedHistories { get; set; }
+        public DbSet<BidingPercentage> BidingPercentages { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

@@ -1,7 +1,11 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Identity
+@using AUCTIONHIVE.Models
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> signInManager;
 @{
+    var user = await UserManager.GetUserAsync(User);
+    var fullName = $"{user?.FirstName} {user?.LastName}";
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,23 +33,23 @@
     <script>
         var phoenixIsRTL = window.config.config.phoenixIsRTL;
         if (phoenixIsRTL) {
-          var linkDefault = document.getElementById('style-default');
-          var userLinkDefault = document.getElementById('user-style-default');
-          linkDefault.setAttribute('disabled', true);
-          userLinkDefault.setAttribute('disabled', true);
-          document.querySelector('html').setAttribute('dir', 'rtl');
+        var linkDefault = document.getElementById('style-default');
+        var userLinkDefault = document.getElementById('user-style-default');
+        linkDefault.setAttribute('disabled', true);
+        userLinkDefault.setAttribute('disabled', true);
+        document.querySelector('html').setAttribute('dir', 'rtl');
         } else {
-          var linkRTL = document.getElementById('style-rtl');
-          var userLinkRTL = document.getElementById('user-style-rtl');
-          linkRTL.setAttribute('disabled', true);
-          userLinkRTL.setAttribute('disabled', true);
+        var linkRTL = document.getElementById('style-rtl');
+        var userLinkRTL = document.getElementById('user-style-rtl');
+        linkRTL.setAttribute('disabled', true);
+        userLinkRTL.setAttribute('disabled', true);
         }
     </script>
     <link href="~/vendors/leaflet/leaflet.css" rel="stylesheet">
     <link href="~/vendors/leaflet.markercluster/MarkerCluster.css" rel="stylesheet">
     <link href="~/vendors/leaflet.markercluster/MarkerCluster.Default.css" rel="stylesheet">
     <link href="~/vendors/swiper/swiper-bundle.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
 
@@ -60,15 +64,40 @@
                 <!-- scrollbar removed-->
                 <div class="navbar-vertical-content">
                     <ul class="navbar-nav flex-column" id="navbarVerticalNav">
-                        <li class="nav-item" >
+                        <li class="nav-item">
                             <!-- parent pages-->
                             <div class="nav-item-wrapper" id="mainMenu">
-                                <a class="nav-link dropdown-indicator label-1" href="#nv-home" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="nv-home">
+                                <a class="nav-link dropdown-indicator label-1" href=" @Url.Action("Index", "Categories")" role="button" aria-expanded="true" aria-controls="nv-home">
                                     <div class="d-flex align-items-center">
-                                        <div  class="dropdown-indicator-icon-wrapper"><span class="fas fa-caret-right dropdown-indicator-icon"></span></div><span class="nav-link-icon"><span data-feather="pie-chart"></span></span><span class="nav-link-text">Menu</span>
+                                        <div class="dropdown-indicator-icon-wrapper">
+                                            <span class="fas faq-category-tab d"></span>
+                                        </div>
+                                        <span class="nav-link">
+                                            <span data-feather="pie-chart"></span>
+                                        </span><span class="nav-link-text">Category</span>
                                     </div>
                                 </a>
-                                <div class="parent-wrapper label-1">
+                                <a class="nav-link dropdown-indicator label-1" href="@Url.Action("Index","SubCategories")" role="button" aria-expanded="true" aria-controls="nv-home">
+                                    <div class="d-flex align-items-center">
+                                        <div class="dropdown-indicator-icon-wrapper">
+                                            <span class="fas fas faq-subcategory-content d"></span>
+                                        </div>
+                                        <span class="nav-link">
+                                            <span data-feather="pie-chart"></span>
+                                        </span><span class="nav-link-text">Sub Categories</span>
+                                    </div>
+                                </a>
+                                <a class="nav-link dropdown-indicator label-1" href="@Url.Action("Index","Product")" role="button" aria-expanded="true" aria-controls="nv-home">
+                                    <div class="d-flex align-items-center">
+                                        <div class="dropdown-indicator-icon-wrapper">
+                                            <span class="fas dropzone-has-default d"></span>
+                                        </div>
+                                        <span class="nav-link">
+                                            <span data-feather="pie-chart"></span>
+                                        </span><span class="nav-link-text">Products</span>
+                                    </div>
+                                </a>
+                                @* <div class="parent-wrapper label-1">
                                     <ul class="nav collapse parent show" data-bs-parent="#navbarVerticalCollapse" id="nv-home">
                                         <li class="collapsed-nav-item-title d-none">Menu</li>
                                         <li class="nav-item" id="btnCategory">
@@ -88,7 +117,7 @@
                                         </li>
 
                                     </ul>
-                                </div>
+                                </div> *@
                             </div>
                         </li>
 
@@ -110,7 +139,7 @@
                         </div>
                     </a>
                 </div>
-               @*  <div class="search-box navbar-top-search-box d-none d-lg-block" data-list='{"valueNames":["title"]}' style="width:25rem;">
+                @*  <div class="search-box navbar-top-search-box d-none d-lg-block" data-list='{"valueNames":["title"]}' style="width:25rem;">
                     <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
                         <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" type="search" placeholder="Search..." aria-label="Search" />
                         <span class="fas fa-search search-box-icon"></span>
@@ -459,7 +488,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                             <div class="avatar avatar-l ">
-                                <img class="rounded-circle " src="assets/img/team/40x40/57.webp" alt="" />
+                                <img class="rounded-circle " src="~/assets/img/team/40x40/57.webp" alt="" />
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border" aria-labelledby="navbarDropdownUser">
@@ -467,29 +496,57 @@
                                 <div class="card-body p-0">
                                     <div class="text-center pt-4 pb-3">
                                         <div class="avatar avatar-xl ">
-                                            <img class="rounded-circle " src="assets/img/team/72x72/57.webp" alt="" />
+                                            @if (user.ProfilePictureUrl != null)
+                                            {
+
+                                                <img src="~/Images/@user.ProfilePictureUrl" class="w-px-40 h-auto rounded-circle">
+                                            }
+                                            else
+                                            {
+                                                <img class="rounded-circle " src="~/assets/img/team/40x40/57.webp" alt="" />
+                                            }
+
                                         </div>
-                                        <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
+                                        <h6 class="mt-2 text-body-emphasis">@fullName</h6>
                                     </div>
-                                    <div class="mb-3 mx-3"><input class="form-control form-control-sm" id="statusUpdateInput" type="text" placeholder="Update your status" /></div>
+
                                 </div>
-                                <div class="overflow-auto scrollbar" style="height: 10rem;">
+                                <div class="overflow-auto scrollbar">
                                     <ul class="nav d-flex flex-column mb-2 pb-1">
-                                        <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="user"></span><span>Profile</span></a></li>
-                                        <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"><span class="me-2 text-body align-bottom" data-feather="pie-chart"></span>Dashboard</a></li>
-                                        <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="lock"></span>Posts &amp; Activity</a></li>
-                                        <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="settings"></span>Settings &amp; Privacy </a></li>
-                                        <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="help-circle"></span>Help Center</a></li>
-                                        <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="globe"></span>Language</a></li>
+                                        <li class="nav-item">
+                                            <a class="nav-link px-3 d-block" href="@Url.Action("Create","Accounts",new{id =user.Id })">
+                                                <span class="me-2 text-body align-bottom" data-feather="user"></span>
+                                                <span>Profile</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link px-3 d-block" href="/Identity/Account/Manage/ChangePassword">
+                                                <span class="me-2 text-body align-bottom" data-feather="globe"></span>Change Password
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="card-footer p-0 border-top border-translucent">
-                                    <ul class="nav d-flex flex-column my-3">
-                                        <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
-                                    </ul>
-                                    <hr />
-                                    <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!"> <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
-                                    <div class="my-2 text-center fw-bold fs-10 text-body-quaternary"><a class="text-body-quaternary me-1" href="#!">Privacy policy</a>&bull;<a class="text-body-quaternary mx-1" href="#!">Terms</a>&bull;<a class="text-body-quaternary ms-1" href="#!">Cookies</a></div>
+
+                                    <div class="px-3">
+                                        @*  <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!">
+                                            <span class="me-2" data-feather="log-out"> </span>Sign out
+                                        </a> *@
+                                        @{
+                                            if (User.Identity?.IsAuthenticated ?? false)
+                                            {
+                                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                                                    <i class="bx bx-power-off me-2">
+                                                    </i>
+                                                    <button type="submit" class="nav-link btn btn-link text-dark">Log Out</button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <p>You have successfully logged out of the application.</p>
+                                            }
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -853,6 +910,11 @@
     <script src="~/assets/js/phoenix.js"></script>
     <script src="~/vendors/echarts/echarts.min.js"></script>
     <script src="~/assets/js/ecommerce-dashboard.js"></script>
+    <!-- jQuery (required by Summernote) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Summernote CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css" rel="stylesheet" />
 
     <script src="~/assets/jquery-3.6.0.min.js"></script>
     <link href="~/assets/jquery.datatables.min.css" rel="stylesheet" />
